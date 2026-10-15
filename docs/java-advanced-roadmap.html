@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نقشه راه Java Advanced</title>
+<style>
+:root { color-scheme: light; }
+body {
+  font-family: Tahoma, "DejaVu Sans", sans-serif;
+  line-height: 1.8;
+  max-width: 48rem;
+  margin: 2rem auto;
+  padding: 0 1.25rem 4rem;
+  color: #1c1917;
+  background: #faf7f2;
+  direction: rtl;
+  text-align: right;
+}
+h1 { font-size: 1.7rem; line-height: 1.4; border-bottom: 2px solid #d6d3d1; padding-bottom: .45rem; }
+h2 { font-size: 1.28rem; line-height: 1.45; margin-top: 2.2rem; color: #1e3a5f; }
+h3 { font-size: 1.08rem; margin-top: 1.4rem; }
+p { margin: .7rem 0; }
+ul, ol { padding-inline-start: 1.5rem; margin: .5rem 0 .9rem; }
+li { margin: .25rem 0; }
+li input[type="checkbox"] { margin-inline-end: .35rem; }
+code {
+  font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+  font-size: .92em;
+  background: #efeae2;
+  padding: .05em .35em;
+  border-radius: 4px;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+pre {
+  background: #1c1917;
+  color: #f5f5f4;
+  padding: .9rem 1rem;
+  overflow: auto;
+  border-radius: 8px;
+  direction: ltr;
+  text-align: left;
+}
+pre code { background: transparent; color: inherit; padding: 0; font-size: .9rem; }
+.lang {
+  font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+  font-size: .75rem;
+  color: #78716c;
+  direction: ltr;
+  text-align: left;
+  margin-bottom: .2rem;
+}
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #d6d3d1; padding: .45rem .65rem; text-align: right; vertical-align: top; }
+th { background: #efeae2; }
+hr { border: 0; border-top: 1px solid #d6d3d1; margin: 2rem 0; }
+strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>نقشه راه Java Advanced</h1>
+<p>برای کسی که Java Core را دارد: نحو، OOP، Collections، exception، generics مقدماتی، فایل، و lambda / Stream مقدماتی.</p>
+<p>نسخهٔ هدف: <strong>Java 21</strong>. این نقشه از شکاف‌های مدرن زبان شروع می‌شود و به JVM می‌رسد. Spring، وب، Android و فریم‌ورک در آن نیست. مطالب نقشهٔ Core اینجا تکرار نمی‌شود.</p>
+<p>چیزی که در Java 21 هنوز preview است، در همان بند با همین وضعیت آمده و API پایدار ۲۱ حساب نمی‌شود.</p>
+<hr>
+<h2>فاز ۱ — قابلیت‌های مدرن زبان</h2>
+<p><strong>هدف:</strong> نوع و شاخه‌بندی را با ابزار پایدار Java 21 مدل کنی، نه با سلسله‌مراتب شلخته.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>record</code>: canonical constructor، compact constructor، محدودیت فیلد</li>
+<li><input type="checkbox" disabled> <code>sealed</code> class و <code>sealed</code> interface، <code>permits</code>، <code>non-sealed</code>، <code>final</code></li>
+<li><input type="checkbox" disabled> exhaustiveness در <code>switch</code> روی نوع <code>sealed</code></li>
+<li><input type="checkbox" disabled> <code>instanceof</code> pattern</li>
+<li><input type="checkbox" disabled> pattern matching برای <code>switch</code>، از جمله <code>null</code> و <code>when</code></li>
+<li><input type="checkbox" disabled> record pattern</li>
+<li><input type="checkbox" disabled> unnamed variable: <code>_</code></li>
+<li><input type="checkbox" disabled> <code>switch</code> expression در برابر <code>switch</code> statement</li>
+<li><input type="checkbox" disabled> text block و incidental indentation</li>
+<li><input type="checkbox" disabled> انتخاب بین <code>record</code>، class، و <code>sealed</code></li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک مدل دامنهٔ کوچک با <code>sealed</code> و <code>record</code> که <code>switch</code> روی آن exhaustive باشد.</p>
+<h2>فاز ۲ — Generics پیشرفته</h2>
+<p><strong>هدف:</strong> امضای generic را طوری بنویسی که erasure و جهت داده را خودت دیدی باشی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> type erasure و اثرش روی overload و <code>instanceof</code></li>
+<li><input type="checkbox" disabled> bounded type parameter</li>
+<li><input type="checkbox" disabled> wildcard: <code>? extends</code> و <code>? super</code></li>
+<li><input type="checkbox" disabled> PECS</li>
+<li><input type="checkbox" disabled> تفاوت <code>List&lt;String&gt;</code>، <code>List&lt;?&gt;</code> و capture</li>
+<li><input type="checkbox" disabled> heap pollution و هشدار unchecked</li>
+<li><input type="checkbox" disabled> انتخاب بین پارامتر نوع و wildcard</li>
+<li><input type="checkbox" disabled> generic و آرایه؛ چرا <code>new T[]</code> ساخته نمی‌شود</li>
+<li><input type="checkbox" disabled> bridge method، در حد دیدن در bytecode</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک API کوچک که تولیدکننده و مصرف‌کننده را با PECS جدا کرده باشد.</p>
+<h2>فاز ۳ — برابری و Collections</h2>
+<p><strong>هدف:</strong> قرارداد برابری را با انتخاب ساختار و هزینهٔ دسترسی یکی کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> قرارداد <code>equals</code>: reflexive، symmetric، transitive، consistent، و <code>null</code></li>
+<li><input type="checkbox" disabled> <code>hashCode</code> هم‌قرارداد با <code>equals</code></li>
+<li><input type="checkbox" disabled> <code>Comparable</code> و سازگاری‌اش با <code>equals</code></li>
+<li><input type="checkbox" disabled> <code>Comparator</code>: <code>thenComparing</code>، ترتیب <code>null</code></li>
+<li><input type="checkbox" disabled> پیچیدگی <code>ArrayList</code>، <code>LinkedList</code>، <code>ArrayDeque</code>، <code>HashMap</code>، <code>TreeMap</code>، <code>HashSet</code>، <code>TreeSet</code></li>
+<li><input type="checkbox" disabled> انتخاب ساختار: دسترسی، ترتیب، یکتایی، درج در دو سر</li>
+<li><input type="checkbox" disabled> <code>List.of</code>، <code>Set.of</code>، <code>Map.of</code>، <code>copyOf</code></li>
+<li><input type="checkbox" disabled> unmodifiable wrapper در برابر collection واقعاً immutable</li>
+<li><input type="checkbox" disabled> <code>SequencedCollection</code> در Java 21</li>
+<li><input type="checkbox" disabled> collision و ظرفیت <code>HashMap</code>، در حد مفهوم</li>
+<li><input type="checkbox" disabled> iterator از نوع fail-fast و <code>ConcurrentModificationException</code></li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک نوع دامنه با <code>equals</code> / <code>hashCode</code> / <code>Comparable</code> که در <code>HashSet</code> و <code>TreeSet</code> درست بنشیند.</p>
+<h2>فاز ۴ — Stream، Collector و Optional</h2>
+<p><strong>هدف:</strong> تجمیع را با Collector درست جمع کنی و نبودن مقدار را از <code>null</code> جدا نگه داری.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>IntStream</code>، <code>LongStream</code>، <code>DoubleStream</code></li>
+<li><input type="checkbox" disabled> <code>flatMap</code></li>
+<li><input type="checkbox" disabled> <code>groupingBy</code>، <code>partitioningBy</code>، <code>toMap</code></li>
+<li><input type="checkbox" disabled> <code>mapping</code>، <code>collectingAndThen</code>، <code>teeing</code></li>
+<li><input type="checkbox" disabled> Collector سفارشی، در حد چهار تابع supplier / accumulator / combiner / finisher</li>
+<li><input type="checkbox" disabled> short-circuit: <code>findFirst</code>، <code>anyMatch</code>، <code>limit</code></li>
+<li><input type="checkbox" disabled> parallel stream: کی ترتیب و کی هزینهٔ مشترک خراب می‌شود</li>
+<li><input type="checkbox" disabled> side effect داخل pipeline</li>
+<li><input type="checkbox" disabled> <code>Optional</code>: <code>map</code>، <code>flatMap</code>، <code>or</code>، <code>orElse</code> در برابر <code>orElseGet</code>، <code>orElseThrow</code></li>
+<li><input type="checkbox" disabled> <code>Optional</code> به‌عنوان نوع برگشت، نه فیلد و نه پارامتر</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک گزارش تجمیعی با <code>groupingBy</code> و یک Collector ترکیبی، بدون <code>NullPointerException</code> برای مقدار غایب.</p>
+<h2>فاز ۵ — Exception و try-with-resources</h2>
+<p><strong>هدف:</strong> خطای اصلی، علت، و خطای بستن منبع را از هم جدا کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> checked در برابر unchecked؛ مرز پرتاب در API خودت</li>
+<li><input type="checkbox" disabled> exception chaining و <code>cause</code></li>
+<li><input type="checkbox" disabled> ترتیب <code>catch</code> و multi-catch</li>
+<li><input type="checkbox" disabled> try-with-resources و ترتیب <code>close</code></li>
+<li><input type="checkbox" disabled> suppressed exception</li>
+<li><input type="checkbox" disabled> <code>AutoCloseable</code> در برابر <code>Closeable</code></li>
+<li><input type="checkbox" disabled> خطای <code>close</code> که exception اصلی را نپوشاند</li>
+<li><input type="checkbox" disabled> استفاده نکردن از exception برای کنترل جریان عادی</li>
+<li><input type="checkbox" disabled> <code>Scanner</code> روی <code>System.in</code> را نبند</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک <code>AutoCloseable</code> ساختگی که هم خطای کار و هم خطای <code>close</code> را با <code>cause</code> و suppressed نشان بدهد.</p>
+<h2>فاز ۶ — I/O و NIO.2</h2>
+<p><strong>هدف:</strong> متن و بایت را با charset و بافر مشخص جابه‌جا کنی، نه با پیش‌فرض پنهان.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>Path</code>، <code>Files</code>، <code>walk</code>، بازدید پوشه</li>
+<li><input type="checkbox" disabled> charset صریح، UTF-8، و خواندن با charset غلط</li>
+<li><input type="checkbox" disabled> buffering: <code>BufferedReader</code> و <code>BufferedWriter</code>؛ کی لازم است</li>
+<li><input type="checkbox" disabled> <code>ByteBuffer</code>: <code>flip</code>، <code>clear</code>، <code>compact</code></li>
+<li><input type="checkbox" disabled> <code>FileChannel</code> برای خواندن و نوشتن بلوکی</li>
+<li><input type="checkbox" disabled> <code>StandardOpenOption</code></li>
+<li><input type="checkbox" disabled> جریان متنی در برابر جریان باینری</li>
+<li><input type="checkbox" disabled> attribute فایل و symbolic link، در حد تشخیص</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> کپی یک فایل باینری با channel و buffer، و خواندن یک متن با charset اعلام‌شده.</p>
+<h2>فاز ۷ — Concurrency و Java Memory Model</h2>
+<p><strong>هدف:</strong> visibility، atomicity، و مدل اجرای Java 21 را از هم جدا ببینی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> Java Memory Model و happens-before</li>
+<li><input type="checkbox" disabled> visibility در برابر atomicity</li>
+<li><input type="checkbox" disabled> <code>volatile</code>: چه را تضمین می‌کند و حد آن</li>
+<li><input type="checkbox" disabled> <code>synchronized</code> و monitor</li>
+<li><input type="checkbox" disabled> <code>Lock</code>، <code>ReentrantLock</code>، <code>tryLock</code></li>
+<li><input type="checkbox" disabled> <code>Condition</code>، در حد جای <code>wait</code> / <code>notify</code></li>
+<li><input type="checkbox" disabled> <code>ConcurrentHashMap</code>، <code>CopyOnWriteArrayList</code>، <code>BlockingQueue</code></li>
+<li><input type="checkbox" disabled> کلاس‌های atomic</li>
+<li><input type="checkbox" disabled> <code>Executor</code>، سیاست استخر، <code>shutdown</code> در برابر <code>shutdownNow</code>، <code>Future</code></li>
+<li><input type="checkbox" disabled> <code>CompletableFuture</code>، در حد ترکیب چند کار</li>
+<li><input type="checkbox" disabled> virtual thread در Java 21، و pin شدن روی <code>synchronized</code></li>
+<li><input type="checkbox" disabled> structured concurrency: در Java 21 هنوز preview است؛ API پایدار ۲۱ نیست</li>
+<li><input type="checkbox" disabled> deadlock، در حد تشخیص از روی thread dump</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک کار موازی با virtual thread و یک وضعیت مشترک که visibility آن با <code>volatile</code> یا lock درست شده باشد.</p>
+<h2>فاز ۸ — Reflection، Annotation و Method Handle</h2>
+<p><strong>هدف:</strong> متادیتا و صدا زدن غیرمستقیم را فقط جایی به کار ببری که API معمولی کافی نیست.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> کی reflection لازم است و کی لازم نیست</li>
+<li><input type="checkbox" disabled> <code>Class</code>، <code>Method</code>، <code>Field</code></li>
+<li><input type="checkbox" disabled> <code>setAccessible</code> و محدودیت ماژول</li>
+<li><input type="checkbox" disabled> retention: <code>SOURCE</code>، <code>CLASS</code>، <code>RUNTIME</code></li>
+<li><input type="checkbox" disabled> خواندن annotation در runtime</li>
+<li><input type="checkbox" disabled> <code>MethodHandle</code>: <code>Lookup</code>، <code>findVirtual</code>، <code>invoke</code></li>
+<li><input type="checkbox" disabled> <code>VarHandle</code>، در حد دسترسی اتمی و شفاف به فیلد</li>
+<li><input type="checkbox" disabled> هزینه و شکنندگی نسبت به صدا زدن معمولی</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک annotation با retention مناسب که روی متد خوانده شود و همان متد یک بار با <code>MethodHandle</code> صدا زده شود.</p>
+<h2>فاز ۹ — Module و مرز classpath</h2>
+<p><strong>هدف:</strong> مرز بستهٔ کد را بفهمی و classpath را با module path عوضی نگیری.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>module-info.java</code></li>
+<li><input type="checkbox" disabled> <code>exports</code> و <code>requires</code></li>
+<li><input type="checkbox" disabled> classpath در برابر module path</li>
+<li><input type="checkbox" disabled> unnamed module</li>
+<li><input type="checkbox" disabled> automatic module</li>
+<li><input type="checkbox" disabled> <code>opens</code> و <code>opens ... to</code> برای reflection</li>
+<li><input type="checkbox" disabled> چه برنامه‌ای هنوز بدون ماژول درست است</li>
+<li><input type="checkbox" disabled> اثر ماژول روی <code>setAccessible</code></li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> یک برنامهٔ دوماژوله که فقط API را export کند و دسترسی بیرون به داخل ماژول را رد کند.</p>
+<h2>فاز ۱۰ — JVM</h2>
+<p><strong>هدف:</strong> از bytecode تا GC و پروفایل، بدانی چه چیزی را نگاه کنی و چه چیزی را حدس نزنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> class loading: bootstrap، platform، application class loader</li>
+<li><input type="checkbox" disabled> linking: verification، preparation، resolution، در حد نام</li>
+<li><input type="checkbox" disabled> خواندن bytecode با <code>javap</code>: <code>invokevirtual</code>، <code>invokespecial</code>، <code>getfield</code>، <code>ldc</code></li>
+<li><input type="checkbox" disabled> stack frame در برابر heap؛ ارجاع روی stack، شیء روی heap</li>
+<li><input type="checkbox" disabled> GC در Java 21: Serial، Parallel، G1 به‌عنوان پیش‌فرض، ZGC وقتی تأخیر مهم است</li>
+<li><input type="checkbox" disabled> stop-the-world، در حد مفهوم</li>
+<li><input type="checkbox" disabled> allocation rate و کی GC مسئلهٔ برنامه است</li>
+<li><input type="checkbox" disabled> JIT به‌صورت مفهومی: C1، C2، warmup، deoptimization</li>
+<li><input type="checkbox" disabled> classpath و تداخل نسخهٔ کلاس</li>
+<li><input type="checkbox" disabled> چه چیزی را در پروفایل نگاه کنی: CPU، allocation، lock، thread dump، GC log</li>
+<li><input type="checkbox" disabled> <code>jcmd</code> و JFR، در حد انتخاب منبع مشاهده نه دستورهای حفظی</li>
+</ul>
+<p><strong>باید بتوانی بسازی:</strong> با <code>javap</code> مسیر یک فراخوانی را بخوانی و از روی thread dump یا GC log بگویی وقت یا حافظه کجا می‌رود.</p>
+<hr>
+<h2>فهرست فازها</h2>
+<ol>
+<li>قابلیت‌های مدرن زبان</li>
+<li>Generics پیشرفته</li>
+<li>برابری و Collections</li>
+<li>Stream، Collector و Optional</li>
+<li>Exception و try-with-resources</li>
+<li>I/O و NIO.2</li>
+<li>Concurrency و Java Memory Model</li>
+<li>Reflection، Annotation و Method Handle</li>
+<li>Module و مرز classpath</li>
+<li>JVM</li>
+</ol>
+</body>
+</html>

@@ -1,3 +1,5 @@
+<div dir="rtl" align="right">
+
 # نقشه راه Java Advanced
 
 برای کسی که Java Core را دارد: نحو، OOP، Collections، exception، generics مقدماتی، فایل، و lambda / Stream مقدماتی.
@@ -209,3 +211,4 @@
 8. Reflection، Annotation و Method Handle
 9. Module و مرز classpath
 10. JVM
+</div>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نقشه راه Java Core، از صفر تا سطح محکم</title>
+<style>
+:root { color-scheme: light; }
+body {
+  font-family: Tahoma, "DejaVu Sans", sans-serif;
+  line-height: 1.8;
+  max-width: 48rem;
+  margin: 2rem auto;
+  padding: 0 1.25rem 4rem;
+  color: #1c1917;
+  background: #faf7f2;
+  direction: rtl;
+  text-align: right;
+}
+h1 { font-size: 1.7rem; line-height: 1.4; border-bottom: 2px solid #d6d3d1; padding-bottom: .45rem; }
+h2 { font-size: 1.28rem; line-height: 1.45; margin-top: 2.2rem; color: #1e3a5f; }
+h3 { font-size: 1.08rem; margin-top: 1.4rem; }
+p { margin: .7rem 0; }
+ul, ol { padding-inline-start: 1.5rem; margin: .5rem 0 .9rem; }
+li { margin: .25rem 0; }
+li input[type="checkbox"] { margin-inline-end: .35rem; }
+code {
+  font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+  font-size: .92em;
+  background: #efeae2;
+  padding: .05em .35em;
+  border-radius: 4px;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+pre {
+  background: #1c1917;
+  color: #f5f5f4;
+  padding: .9rem 1rem;
+  overflow: auto;
+  border-radius: 8px;
+  direction: ltr;
+  text-align: left;
+}
+pre code { background: transparent; color: inherit; padding: 0; font-size: .9rem; }
+.lang {
+  font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+  font-size: .75rem;
+  color: #78716c;
+  direction: ltr;
+  text-align: left;
+  margin-bottom: .2rem;
+}
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #d6d3d1; padding: .45rem .65rem; text-align: right; vertical-align: top; }
+th { background: #efeae2; }
+hr { border: 0; border-top: 1px solid #d6d3d1; margin: 2rem 0; }
+strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>نقشه راه Java Core، از صفر تا سطح محکم</h1>
+<p>برای امیررضا قادری.</p>
+<p>هدف این مسیر Java 21 LTS است: خود زبان و کتابخانه استاندارد، از اولین <code>main</code> تا جایی که یک برنامه کوچک را خودت طراحی کنی، بنویسی، اجرا کنی و خطایش را بخوانی. پیش‌فرض این سند صفر است. اگر قبلاً با زبان دیگری کار کرده باشی، فازها را رد نکن؛ فقط تمرین را کمی تندتر بنویس.</p>
+<h2>Java Core چیست و چیست نیست</h2>
+<p>Java Core یعنی خود زبان جاوا و آن بخش از کتابخانه استاندارد که بدون هیچ فریم‌ورکی هم لازم است:</p>
+<ul>
+<li>نحو زبان: نوع، متغیر، عملگر، شرط، حلقه، متد، آرایه</li>
+<li>برنامه‌نویسی شیءگرا: class، شیء، وراثت، interface، چندریختی</li>
+<li>exception، generics و Collections</li>
+<li>فایل با I/O و NIO.2</li>
+<li>lambda، Stream و Optional</li>
+<li>مبانی concurrency</li>
+<li>تصویری ساده و درست از JVM، در حدی که بدانی برنامه چطور اجرا می‌شود</li>
+</ul>
+<p>این مسیر عمداً این‌ها را درس نمی‌دهد: Spring، هر فریم‌ورک وب، Android، دیتابیس، و ساخت API. Maven و Gradle را هم وارد نمی‌کنیم. تا پایان همین سند با <code>javac</code> و <code>java</code> کار می‌کنیم تا معلوم باشد پشت ادیتور چه اتفاقی می‌افتد.</p>
+<h2>روش مطالعه</h2>
+<p>هر بار فقط یک فاز. درس کوتاه است، بعد بلافاصله کد. فاز بعدی شروع نمی‌شود تا تمرین‌های فاز فعلی را خودت اجرا کرده باشی و جمله «برای فاز بعد آماده‌ای وقتی» را صادقانه برآورده کرده باشی.</p>
+<p>اگر گیر کردی، راه‌حل کامل نخواه. بگو روی کدام خط مانده‌ای و متن خطا چیست. خطا بخشی از درس است، نه علامت توقف.</p>
+<p>کد را در پوشه‌ای به نام <code>java-core</code> نگه دار. هر فاز یک زیرپوشه دارد، مثل <code>phase-01</code>. هر برنامه یک فایل <code>.java</code> جداست. نام فایل و نام class یکی است.</p>
+<p>نسخه را همان اول قفل کن: <strong>JDK 21</strong>. اگر <code>java -version</code> عدد 21 را نشان نداد، قبل از هر تمرین دیگری همان را درست می‌کنیم.</p>
+<p>فهرست فازها:</p>
+<ol>
+<li>محیط و اولین برنامه</li>
+<li>نوع، متغیر و عملگر</li>
+<li>شرط و حلقه</li>
+<li>متد و آرایه</li>
+<li>کلاس و شیء</li>
+<li>وراثت، interface و چندریختی</li>
+<li>Exception و Generics</li>
+<li>Collections</li>
+<li>Lambda و Stream</li>
+<li>فایل: I/O و NIO.2</li>
+<li>مبانی همزمانی</li>
+<li>JVM در حد یادگیرنده</li>
+</ol>
+<hr>
+<h2>فاز ۱ — محیط و اولین برنامه</h2>
+<p><strong>هدف:</strong> JDK 21 را راه بیندازی و یک برنامه را خودت کامپایل و اجرا کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> نصب JDK 21 و دیدن نسخه با <code>java -version</code> و <code>javac -version</code></li>
+<li><input type="checkbox" disabled> فایل متنی <code>.java</code>؛ نام فایل برابر نام class</li>
+<li><input type="checkbox" disabled> قالب <code>main</code> را عین همین شکل بنویس. معنی <code>static</code> را فاز ۵ باز می‌کنیم</li>
+<li><input type="checkbox" disabled> <code>System.out.println</code> برای چاپ یک خط</li>
+<li><input type="checkbox" disabled> <code>javac</code> فایل <code>.class</code> می‌سازد؛ <code>java</code> همان را اجرا می‌کند</li>
+<li><input type="checkbox" disabled> کامنت <code>//</code> و پیدا کردن شماره خط در پیام خطای کامپایلر</li>
+</ul>
+<p>قالب جلسه اول، که خودت تایپ می‌کنی:</p>
+<div class="lang">java</div><pre><code>public class Hello {
+    public static void main(String[] args) {
+        System.out.println(&quot;...&quot;);
+    }
+}</code></pre>
+<p>از همان پوشه فایل:</p>
+<div class="lang">bash</div><pre><code>javac Hello.java
+java Hello</code></pre>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>سلام.</strong> <code>Hello.java</code> را طوری بنویس که دقیقاً چاپ کند: <code>سلام، امیررضا</code>. کامپایل و اجرا با دستورهای بالا.</li>
+<li><strong>سه خط.</strong> برنامه <code>AboutMe</code> در سه <code>println</code> جدا این‌ها را چاپ کند: نام تو، یک عدد که خودت انتخاب می‌کنی، و یک جمله که بگوید این اولین برنامه جاوای توست.</li>
+<li><strong>خطای عمدی.</strong> از برنامه اول یک <code>;</code> را بردار. <code>javac</code> را دوباره بزن، شماره خط را در پیام پیدا کن، سمیکالن را برگردان و اجرای سالم بگیر.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> بدون جزوه یک class با <code>main</code> می‌سازی، <code>javac</code> و <code>java</code> را درست صدا می‌زنی، و اگر سمیکالن جا مانده باشد از روی پیام کامپایلر همان خط را نشان می‌دهی.</p>
+<h2>فاز ۲ — نوع، متغیر و عملگر</h2>
+<p><strong>هدف:</strong> داده را در متغیر نگه داری، با آن محاسبه کنی، و از کاربر ورودی بگیری.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> نوع‌های <code>int</code>، <code>long</code>، <code>double</code>، <code>boolean</code>، <code>char</code></li>
+<li><input type="checkbox" disabled> نام‌گذاری متغیر: حرف کوچک در شروع، مثل <code>birthYear</code></li>
+<li><input type="checkbox" disabled> عملگرهای <code>+ - * / %</code> و فرق تقسیم صحیح با تقسیم اعشاری</li>
+<li><input type="checkbox" disabled> تبدیل نوع وقتی لازم است، مثل <code>(double) a / b</code></li>
+<li><input type="checkbox" disabled> <code>String</code> برای متن؛ چسباندن با <code>+</code></li>
+<li><input type="checkbox" disabled> مقایسه رشته با <code>equals</code>، نه با <code>==</code></li>
+<li><input type="checkbox" disabled> <code>import java.util.Scanner;</code> برای ورودی. کلاس‌های <code>java.lang</code> مثل <code>String</code> و <code>System</code> را import نمی‌کنی</li>
+<li><input type="checkbox" disabled> text block برای یک متن چندخطی، با <code>&quot;&quot;&quot;</code></li>
+</ul>
+<p><strong>مراقب این باگ باش:</strong> <code>1 / 2</code> در <code>int</code> می‌شود <code>0</code>. برای میانگین نمره از <code>double</code> استفاده کن.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>دما.</strong> برنامه <code>Celsius</code> یک عدد بگیرد (درجه سلسیوس) و فارنهایت را چاپ کند: سلسیوس × ۹ ÷ ۵ + ۳۲. تقسیم باید اعشاری باشد. اگر هر دو طرف تقسیم <code>int</code> باشند، جاوا حاصل را به سمت صفر قطع می‌کند.</li>
+<li><strong>مستطیل.</strong> طول و عرض را بخواند و محیط و مساحت را در دو خط چاپ کند. اگر یکی از ضلع‌ها صفر یا منفی بود، به‌جای محاسبه بنویسد: <code>ضلع نامعتبر است</code>.</li>
+<li><strong>چهار عمل.</strong> دو <code>int</code> بگیرد و جمع، تفریق، ضرب، تقسیم صحیح و باقی‌مانده را چاپ کند. اگر عدد دوم صفر بود، تقسیم و باقی‌مانده را حساب نکند و بنویسد: <code>تقسیم بر صفر ممکن نیست</code>.</li>
+<li><strong>منوی متنی.</strong> با یک text block یک منوی سه خطی چاپ کند (جمع، تفریق، خروج). بعد یک <code>String</code> از کاربر بگیرد. اگر با <code>equals</code> برابر <code>خروج</code> بود بنویسد <code>خداحافظ</code>، وگرنه <code>ادامه</code>. کار خود منو مال فاز ۳ است.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> برای یک محاسبه کوچک نوع مناسب را انتخاب می‌کنی، ورودی عددی می‌گیری، و دو رشته را با <code>equals</code> مقایسه می‌کنی نه با <code>==</code>.</p>
+<h2>فاز ۳ — شرط و حلقه</h2>
+<p><strong>هدف:</strong> برنامه بر اساس شرط راهش را عوض کند و کار تکراری را با حلقه انجام دهد.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>if</code>، <code>else if</code>، <code>else</code></li>
+<li><input type="checkbox" disabled> <code>switch</code> کلاسیک، و <code>switch</code> با فلش که از Java 14 استاندارد است و به case بعدی نشت نمی‌کند:</li>
+</ul>
+<div class="lang">java</div><pre><code>String label = switch (choice) {
+    case 1 -&gt; &quot;جمع&quot;;
+    case 2 -&gt; &quot;تفریق&quot;;
+    default -&gt; &quot;نامشخص&quot;;
+};</code></pre>
+<ul>
+<li><input type="checkbox" disabled> <code>for</code>، <code>while</code>، <code>do-while</code></li>
+<li><input type="checkbox" disabled> <code>break</code> برای خروج از حلقه، <code>continue</code> برای پرش به دور بعد</li>
+<li><input type="checkbox" disabled> شرط پایان حلقه را قبل از اجرا با یک جمله فارسی بنویس تا حلقه بی‌نهایت نسازی</li>
+</ul>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>جدول ضرب.</strong> یک عدد از ۱ تا ۱۰ بگیرد و حاصل‌ضرب آن در ۱ تا ۱۰ را چاپ کند. اگر عدد بیرون این بازه بود، یک جمله خطا چاپ کند و تمام شود.</li>
+<li><strong>FizzBuzz.</strong> اعداد ۱ تا ۵۰ را چاپ کند. مضرب ۳: <code>Fizz</code>. مضرب ۵: <code>Buzz</code>. مضرب هر دو: <code>FizzBuzz</code>.</li>
+<li><strong>حدس عدد.</strong> برنامه یک عدد بین ۱ و ۵۰ را در کد ثابت نگه دارد. کاربر با <code>while</code> حدس بزند. بعد از هر حدس بگو <code>بزرگ‌تر</code>، <code>کوچک‌تر</code> یا <code>درست</code>. بیشتر از ۸ حدس را با یک پیام تمام کن.</li>
+<li><strong>ماشین‌حساب منویی.</strong> منوی فاز ۲ را زنده کن. با <code>switch</code> فلش‌دار: ۱ جمع، ۲ تفریق، ۳ خروج. تا وقتی کاربر ۳ را نزده، منو تکرار شود.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> برای یک کار، خودت تصمیم می‌گیری <code>if</code> کافی است یا حلقه لازم است، و می‌توانی بگویی حلقه کی تمام می‌شود.</p>
+<h2>فاز ۴ — متد و آرایه</h2>
+<p><strong>هدف:</strong> کار را به متدهای کوچک بشکنی و چند مقدار هم‌نوع را در آرایه نگه داری.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> تعریف متد <code>static</code> با پارامتر و <code>return</code></li>
+<li><input type="checkbox" disabled> <code>void</code> وقتی خروجی نداری</li>
+<li><input type="checkbox" disabled> overloading: چند متد با یک نام و پارامتر متفاوت</li>
+<li><input type="checkbox" disabled> آرایه <code>int[]</code>، طول با <code>length</code>، مقداردهی اولیه</li>
+<li><input type="checkbox" disabled> پیمایش با <code>for</code> معمولی و با <code>for (int n : scores)</code></li>
+<li><input type="checkbox" disabled> متد، کپی مقدار می‌گیرد؛ آرایه را که به متد می‌دهی، متد همان محتویات را می‌بیند</li>
+</ul>
+<p>تا این فاز کد هنوز داخل همان class برنامه است و متدها <code>static</code> هستند. شیء از فاز ۵ شروع می‌شود.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>سه متد.</strong> <code>isEven(int n)</code>، <code>max(int a, int b)</code> و <code>average(int a, int b, int c)</code> را بنویس. <code>main</code> فقط آن‌ها را صدا بزند و نتیجه را چاپ کند. میانگین باید <code>double</code> باشد.</li>
+<li><strong>نمره‌ها.</strong> یک <code>int[]</code> با حداقل ۵ نمره بساز. متدهای میانگین، کمینه و بیشینه را روی کل آرایه بنویس و از <code>main</code> صدا بزن. اگر نام <code>average</code> را برای آرایه هم می‌خواهی، این همان overloading است. اگر آرایه خالی بود یک جمله چاپ کن و برگرد، نه اینکه برنامه سقوط کند.</li>
+<li><strong>برعکس.</strong> <code>reverse</code> یک <code>int[]</code> بگیرد و یک آرایه جدید برعکس برگرداند. آرایه ورودی نباید عوض شود. قبل و بعد را چاپ کن تا این را نشان بدهی.</li>
+<li><strong>مساحت با overload.</strong> دو متد <code>area</code>: یکی فقط ضلع مربع را بگیرد، یکی طول و عرض مستطیل را. هر دو را از <code>main</code> صدا بزن.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> یک محاسبه را از <code>main</code> بیرون می‌کشی، ورودی و خروجی متد را خودت انتخاب می‌کنی، و روی یک آرایه میانگین و بیشینه را با متد خودت حساب می‌کنی.</p>
+<h2>فاز ۵ — کلاس و شیء</h2>
+<p><strong>هدف:</strong> یک مفهوم واقعی را با class مدل کنی و وضعیت هر شیء را جدا و محافظت‌شده نگه داری.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> class، فیلد، شیء، <code>new</code></li>
+<li><input type="checkbox" disabled> سازنده (constructor) و کلمه <code>this</code></li>
+<li><input type="checkbox" disabled> encapsulation: فیلد <code>private</code>، دسترسی از طریق متد</li>
+<li><input type="checkbox" disabled> فرق متد instance با متد <code>static</code></li>
+<li><input type="checkbox" disabled> فیلد <code>static</code> که بین همه شیءهای آن class مشترک است</li>
+<li><input type="checkbox" disabled> <code>toString</code> برای چاپ خوانا</li>
+<li><input type="checkbox" disabled> package و اجرا از پوشه بالاتر</li>
+<li><input type="checkbox" disabled> سطح دسترسی <code>public</code> و <code>private</code>. <code>protected</code> را فاز ۶، کنار وراثت، می‌بینیم</li>
+</ul>
+<p>دو شیء یعنی دو وضعیت جدا. اگر <code>a</code> را عوض کردی و <code>b</code> هم عوض شد، معمولاً اشتباهاً هر دو را به یک شیء وصل کرده‌ای، یا فیلد را <code>static</code> گذاشته‌ای.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>شمارنده.</strong> class <code>Counter</code> با <code>increment</code> و <code>getValue</code>. در <code>main</code> دو <code>Counter</code> بساز. یکی را سه بار زیاد کن. چاپ کن که دومی هنوز صفر است.</li>
+<li><strong>حساب بانکی.</strong> class <code>BankAccount</code> در package به نام <code>bank</code>. خط اول فایل باید <code>package bank;</code> باشد. نام صاحب حساب و موجودی <code>private</code>، متد <code>deposit</code> و <code>withdraw</code>. برداشت بیشتر از موجودی نباید موجودی را منفی کند؛ همان موقع بنویسد <code>موجودی کافی نیست</code>. <code>main</code> در همان کلاس یک واریز، یک برداشت موفق، و یک برداشت بیشتر از موجودی را نشان بدهد. از پوشه والد این‌طور اجرا کن:</li>
+</ol>
+<div class="lang">bash</div><pre><code>javac -d . bank/BankAccount.java
+java bank.BankAccount</code></pre>
+<ol>
+<li><strong>کتاب.</strong> class <code>Book</code> با عنوان، نویسنده و سال، فقط از راه سازنده پر شود، و <code>toString</code> یک خط فارسی قابل خواندن برگرداند. سه کتاب بساز و چاپ کن.</li>
+<li><strong>شمارش حساب‌ها.</strong> به <code>BankAccount</code> یک فیلد <code>static</code> اضافه کن که تعداد حساب‌های ساخته‌شده را نگه دارد. سه حساب بساز و نشان بده این عدد برای همه یکی است، در حالی که موجودی هر حساب جداست.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> یک class با فیلد <code>private</code>، سازنده و متد می‌نویسی، دو شیء جدا می‌سازی، و می‌توانی توضیح بدهی کدام داده مال شیء است و کدام <code>static</code> است.</p>
+<h2>فاز ۶ — وراثت، interface و چندریختی</h2>
+<p><strong>هدف:</strong> رفتار مشترک را یک‌جا تعریف کنی و از طریق نوع والد یا interface با شیءهای مختلف یک‌جور کار کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>extends</code>، <code>super</code>، و <code>@Override</code></li>
+<li><input type="checkbox" disabled> abstract class وقتی زیرکلاس‌ها وضعیت مشترک دارند</li>
+<li><input type="checkbox" disabled> interface وقتی فقط یک قابلیت مشترک است، مثل قابل پرداخت بودن</li>
+<li><input type="checkbox" disabled> چندریختی (polymorphism): متغیر از نوع والد، شیء از نوع فرزند</li>
+<li><input type="checkbox" disabled> <code>protected</code> برای عضوی که فرزند لازم دارد و بیرون کلاس نه</li>
+<li><input type="checkbox" disabled> <code>enum</code> برای مجموعه ثابت وضعیت‌ها</li>
+<li><input type="checkbox" disabled> <code>record</code> برای داده‌ای که هویتش همان فیلدهایش است</li>
+<li><input type="checkbox" disabled> <code>instanceof</code> با الگو، از Java 16: <code>if (shape instanceof Circle c)</code></li>
+<li><input type="checkbox" disabled> آشنایی با sealed class: محدود کردن اینکه چه classهایی حق <code>extends</code> دارند. در checkpoint الزامی نیست</li>
+</ul>
+<p>قانون انتخاب، همین یک خط: وضعیت و کد مشترک می‌خواهی، abstract class. فقط قرارداد یک رفتار را می‌خواهی، interface.</p>
+<p>اگر چند class را <code>public</code> کنی، هر کدام فایل جدا به همان نام می‌خواهد. ساده‌ترین کار در این فاز: فقط کلاسی که <code>main</code> دارد <code>public</code> باشد.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>شکل‌ها.</strong> abstract class <code>Shape</code> با متد abstract <code>area</code>. دو فرزند <code>Circle</code> و <code>Rectangle</code>. یک آرایه <code>Shape[]</code> بساز، هر دو نوع را داخلش بگذار، و در یک حلقه مساحت را چاپ کن.</li>
+<li><strong>قابل پرداخت.</strong> interface <code>Payable</code> با متد <code>int pay()</code>. دو class جدا (مثلاً <code>Salary</code> و <code>Invoice</code>) آن را پیاده کنند. در یک <code>Payable[]</code> هر دو را صدا بزن و جمع پرداخت را چاپ کن.</li>
+<li><strong>وضعیت سفارش.</strong> <code>enum OrderStatus</code> با <code>PENDING</code>، <code>PAID</code>، <code>SHIPPED</code>. یک متد با <code>switch</code> فلش‌دار برای هر وضعیت یک جمله فارسی برگرداند. هر سه مقدار را از <code>main</code> چاپ کن.</li>
+<li><strong>نقطه.</strong> <code>record Point(int x, int y)</code> بنویس و متد <code>distance</code> که فاصله اقلیدسی تا یک <code>Point</code> دیگر را به‌صورت <code>double</code> برگرداند. از <code>Math.sqrt</code> استفاده کن. دو نقطه بساز و فاصله را چاپ کن.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> یک interface یا abstract class با دو پیاده‌سازی داری و متد را از روی نوع والد صدا می‌زنی، بدون اینکه در <code>main</code> به نوع واقعی <code>if</code> بزنی.</p>
+<h2>فاز ۷ — Exception و Generics</h2>
+<p><strong>هدف:</strong> خطای قابل‌پیش‌بینی را مدیریت کنی و یک class یا متد را نسبت به نوع، عمومی بنویسی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> exception یعنی قطع شدن جریان عادی با یک شیء خطا</li>
+<li><input type="checkbox" disabled> unchecked مثل <code>IllegalArgumentException</code> و <code>InputMismatchException</code> که زیر <code>RuntimeException</code> هستند. checked زیر <code>Exception</code> است ولی زیر <code>RuntimeException</code> نیست و باید <code>catch</code> یا <code>throws</code> شود</li>
+<li><input type="checkbox" disabled> <code>try</code> / <code>catch</code> / <code>finally</code></li>
+<li><input type="checkbox" disabled> <code>throw</code> برای پرتاب، <code>throws</code> برای اعلام</li>
+<li><input type="checkbox" disabled> یک exception اختصاصی با پیام فارسی روشن</li>
+<li><input type="checkbox" disabled> try-with-resources را اینجا فقط بشناس. بستن فایل با آن مال فاز ۱۰ است. <code>Scanner</code> وصل به <code>System.in</code> را نبند؛ ورودی استاندارد بسته می‌شود</li>
+<li><input type="checkbox" disabled> کلاس Generic مثل <code>Box&lt;T&gt;</code>، و متد Generic</li>
+<li><input type="checkbox" disabled> محدودیت <code>T extends Number</code> در حد یک مثال</li>
+<li><input type="checkbox" disabled> علامت <code>?</code> را فقط بلد باش بخوانی، مثل <code>List&lt;?&gt;</code>. تا وقتی لازم نشده خودت wildcard ننویس</li>
+</ul>
+<p>پیام exception باید بگوید چه چیزی غلط بوده و مقدار غلط چه بوده. نوشتن فقط کلمه «خطا» کافی نیست.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>خواندن امن عدد.</strong> با <code>Scanner</code> یک <code>int</code> بخواه. اگر ورودی عدد نبود، <code>InputMismatchException</code> را بگیر، بنویس <code>لطفاً یک عدد صحیح وارد کن</code> و دوباره بپرس. حداکثر سه تلاش. <code>Scanner</code> را نبند. توکن غلط بعد از این exception هنوز داخل <code>Scanner</code> مانده؛ با <code>next()</code> دور بریز، وگرنه حلقه تمام نمی‌شود.</li>
+<li><strong>سن معتبر.</strong> متد <code>parseAge(String text)</code> اگر متن عدد نباشد یا سن منفی یا بیشتر از ۱۵۰ باشد، یک checked exception به نام <code>InvalidAgeException</code> پرتاب کند که در پیامش مقدار غلط را آورده باشد. <code>main</code> آن را <code>catch</code> کند و فقط همان پیام را چاپ کند، نه stack trace را.</li>
+<li><strong>جعبه.</strong> <code>Box&lt;T&gt;</code> با <code>put</code> و <code>get</code>. یک بار <code>Box&lt;String&gt;</code> و یک بار <code>Box&lt;Integer&gt;</code> بساز تا ببینی نوع را خود class تکراری نمی‌کنی.</li>
+<li><strong>اولین عنصر.</strong> متد <code>&lt;T&gt; T first(T[] items)</code> اولین عنصر را برگرداند. اگر آرایه <code>null</code> یا خالی بود، <code>IllegalArgumentException</code> با پیام روشن پرتاب کند.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> ورودی بد را به سقوط برنامه تبدیل نمی‌کنی، برای یک قانون مشخص exception مناسب پرتاب می‌کنی، و یک class ساده با <code>T</code> می‌نویسی.</p>
+<h2>فاز ۸ — Collections</h2>
+<p><strong>هدف:</strong> به‌جای آرایه خام، بین List و Set و Map درست انتخاب کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>List</code> و <code>ArrayList</code> وقتی ترتیب و تکرار مهم است</li>
+<li><input type="checkbox" disabled> <code>Set</code> و <code>HashSet</code> وقتی یکتا بودن مهم است</li>
+<li><input type="checkbox" disabled> <code>Map</code> و <code>HashMap</code> وقتی با کلید پیدا می‌کنی</li>
+<li><input type="checkbox" disabled> آشنایی با <code>TreeSet</code> و <code>TreeMap</code> فقط برای وقتی که ترتیب مرتب‌شده را می‌خواهی</li>
+<li><input type="checkbox" disabled> پیمایش با <code>for</code> و با <code>forEach</code></li>
+<li><input type="checkbox" disabled> <code>equals</code> و <code>hashCode</code> با هم؛ اگر <code>equals</code> را نوشتی و <code>hashCode</code> را نه، <code>HashSet</code> درست کار نمی‌کند</li>
+<li><input type="checkbox" disabled> برای پیاده‌سازی از <code>Objects.equals</code> و <code>Objects.hash</code> استفاده کن</li>
+<li><input type="checkbox" disabled> <code>LinkedList</code> را برای این مسیر لازم نداری، مگر وسط یک لیست خیلی بزرگ مرتب حذف و اضافه کنی</li>
+</ul>
+<p>قانون انتخاب:</p>
+<ul>
+<li>فهرست مرتب، تکرار مجاز: <code>ArrayList</code></li>
+<li>عضو تکراری بی‌معنی است: <code>HashSet</code></li>
+<li>جستجو با کلید: <code>HashMap</code></li>
+</ul>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>دفترچه تلفن.</strong> <code>HashMap&lt;String, String&gt;</code> از نام به شماره. افزودن، جستجو، حذف. اگر نام نبود بنویسد <code>چنین نامی نیست</code>، نه اینکه <code>null</code> خام چاپ کند.</li>
+<li><strong>خرید.</strong> اقلام را در <code>ArrayList</code> بگیر (حتی اگر تکراری وارد شد). یک فرمان چاپ، همه را نشان بدهد. یک فرمان دیگر فقط نام‌های یکتا را با <code>HashSet</code> چاپ کند.</li>
+<li><strong>شمارش کلمه.</strong> یک جمله را با <code>split(&quot; &quot;)</code> به کلمه بشکن و در <code>HashMap&lt;String, Integer&gt;</code> تعداد هر کلمه را بشمار. نتیجه را خط‌به‌خط چاپ کن.</li>
+<li><strong>دانشجوی یکتا.</strong> class <code>Student</code> با شماره دانشجویی، نام و <code>equals</code> / <code>hashCode</code> فقط بر اساس شماره. دو شیء با یک شماره و نام متفاوت بساز، هر دو را در <code>HashSet</code> بریز، و نشان بده اندازه مجموعه ۱ است.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> برای یک مسئله می‌گویی چرا <code>List</code> یا <code>Set</code> یا <code>Map</code>، و می‌توانی نشان بدهی <code>equals</code> بدون <code>hashCode</code> در <code>HashSet</code> غافلگیرت می‌کند.</p>
+<h2>فاز ۹ — Lambda و Stream</h2>
+<p><strong>هدف:</strong> روی یک مجموعه، بدون حلقه طولانی، فیلتر و تبدیل و جمع‌بندی کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> lambda یعنی تابع کوتاه بدون نام: <code>n -&gt; n &gt;= 10</code></li>
+<li><input type="checkbox" disabled> method reference مثل <code>System.out::println</code></li>
+<li><input type="checkbox" disabled> <code>Stream</code> را از یک <code>List</code> با <code>.stream()</code> بگیر</li>
+<li><input type="checkbox" disabled> <code>filter</code>، <code>map</code>، <code>sorted</code>، <code>toList</code></li>
+<li><input type="checkbox" disabled> <code>mapToInt</code> و <code>average</code> و <code>count</code></li>
+<li><input type="checkbox" disabled> <code>Optional</code> برای «شاید نباشد»: <code>isPresent</code>، <code>orElse</code>، و چاپ پیام خودت به‌جای <code>NullPointerException</code></li>
+<li><input type="checkbox" disabled> وسط <code>Stream</code> خود لیست منبع را عوض نکن</li>
+</ul>
+<p><code>Stream</code> جای <code>for</code> را همیشه نمی‌گیرد. برای یک پیمایش ساده، حلقه معمولی واضح‌تر است. Stream را وقتی زنجیره فیلتر و تبدیل داری به کار ببر.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>نام‌ها.</strong> یک <code>List&lt;String&gt;</code> از حداقل شش نام. با Stream آن‌هایی را که طولشان بیشتر از ۴ است نگه دار، مرتب کن، و با <code>System.out::println</code> چاپ کن.</li>
+<li><strong>نمره و قبولی.</strong> لیست حداقل شش <code>int</code>. با Stream میانگین را حساب کن و تعداد نمره‌های بزرگ‌تر یا مساوی ۱۰ را جداگانه چاپ کن. لیست خالی نباید استثناء عجیب بدهد؛ بنویس <code>نمره‌ای نیست</code>.</li>
+<li><strong>جستجوی دانشجو.</strong> از لیست <code>Student</code> فاز ۸، با Stream کسی را که شماره‌اش را می‌دهی پیدا کن و نتیجه را در <code>Optional</code> برگردان. اگر نبود دقیقاً چاپ کند <code>پیدا نشد</code>.</li>
+<li><strong>تبدیل.</strong> همان نام‌ها را با <code>map</code> به طول هر نام تبدیل کن و <code>toList()</code> را چاپ کن. کنارش همان کار را یک بار با <code>for</code> بنویس تا فرق خوانایی را خودت ببینی.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> یک لیست را با lambda فیلتر و map می‌کنی، نتیجه را با <code>toList</code> می‌گیری، و نبودن یک مقدار را با <code>Optional</code> به <code>NullPointerException</code> تبدیل نمی‌کنی.</p>
+<h2>فاز ۱۰ — فایل: I/O و NIO.2</h2>
+<p><strong>هدف:</strong> متن را در فایل بنویسی و بخوانی، و نبودن فایل را به‌شکل درست مدیریت کنی.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> <code>Path</code> و <code>Path.of(&quot;notes.txt&quot;)</code></li>
+<li><input type="checkbox" disabled> نوشتن و خواندن متن با <code>Files.writeString</code> و <code>Files.readString</code> (هر دو UTF-8 هستند، پس فارسی در فایل سالم می‌ماند)</li>
+<li><input type="checkbox" disabled> خواندن خط‌ها با <code>Files.readAllLines</code></li>
+<li><input type="checkbox" disabled> try-with-resources وقتی منبع باید بسته شود</li>
+<li><input type="checkbox" disabled> <code>Files.list</code> برای دیدن محتوای یک پوشه؛ این Stream را هم باید ببندی</li>
+<li><input type="checkbox" disabled> فرق مسیر نسبی با مسیر از پوشه‌ای که برنامه را از آنجا اجرا کرده‌ای</li>
+<li><input type="checkbox" disabled> <code>IOException</code> یک checked exception است؛ یا آن را مدیریت کن یا در امضای <code>main</code> اعلام کن</li>
+<li><input type="checkbox" disabled> اگر فایل نبود، <code>NoSuchFileException</code> را بگیر و یک جمله فارسی چاپ کن</li>
+</ul>
+<p>در این فاز سریال‌سازی بایتِ شیء (<code>ObjectOutputStream</code>) را یاد نمی‌گیریم. ذخیره را متنی و خوانا نگه دار.</p>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>یادداشت.</strong> برنامه سه خط متن (یکی از خط‌ها نام امیررضا باشد) را در <code>notes.txt</code> بنویسد، بعد همان فایل را بخواند و عیناً چاپ کند.</li>
+<li><strong>میانگین CSV.</strong> یک فایل <code>scores.csv</code> بساز با این محتوا:</li>
+</ol>
+<div class="lang">text</div><pre><code>ali,18
+sara,15
+reza,9</code></pre>
+<p>برنامه خط‌ها را بخواند، عدد بعد از ویرگول را جدا کند و میانگین را چاپ کند. یک خط خراب هم به فایل اضافه کن، مثل <code>nima,x</code>. اگر یک خط عدد نبود، همان خط را با شماره خط گزارش کند و بقیه را ادامه بدهد.</p>
+<ol>
+<li><strong>فهرست txt.</strong> با NIO.2 همه فایل‌های <code>.txt</code> پوشه جاری را چاپ کند. <code>Files.list</code> داخل try-with-resources باشد.</li>
+<li><strong>فایل غایب.</strong> همان برنامه میانگین را روی نام فایلی که وجود ندارد اجرا کن. خروجی باید یک خط باشد: <code>فایل پیدا نشد</code>. stack trace چاپ نشود.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> یک فایل متنی را با NIO.2 می‌نویسی و می‌خوانی، و اگر فایل نباشد برنامه با پیام روشن تمام می‌شود.</p>
+<h2>فاز ۱۱ — مبانی همزمانی</h2>
+<p><strong>هدف:</strong> بدانی thread چیست، چرا وضعیت مشترک خطرناک است، و یک کار را به شکل مدرن Java 21 اجرا کنی.</p>
+<p>این فاز مدل اجرا را یاد می‌دهد. ساخت سرور، سوکت، و وب در آن نیست.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> thread یک مسیر اجرای جدا داخل همان برنامه است</li>
+<li><input type="checkbox" disabled> <code>Runnable</code> و <code>Thread.start</code>، نه صدا زدن مستقیم <code>run</code> اگر می‌خواهی واقعاً هم‌زمان شود</li>
+<li><input type="checkbox" disabled> <code>join</code> تا <code>main</code> قبل از تمام شدن کار، نتیجه را نخواند</li>
+<li><input type="checkbox" disabled> race: دو thread که یک متغیر را با <code>count++</code> عوض می‌کنند نتیجه را گم می‌کنند</li>
+<li><input type="checkbox" disabled> <code>synchronized</code> روی متد یا بلوک، برای محافظت از همان متغیر</li>
+<li><input type="checkbox" disabled> <code>ExecutorService</code>، <code>submit</code>، <code>Future.get</code>، و حتماً <code>shutdown</code></li>
+<li><input type="checkbox" disabled> virtual thread در Java 21 با <code>Thread.ofVirtual().start(...)</code></li>
+<li><input type="checkbox" disabled> virtual thread به‌صورت پیش‌فرض daemon است؛ اگر <code>main</code> زود تمام شود ممکن است پیامش را نبینی. <code>join</code> کن</li>
+<li><input type="checkbox" disabled> <code>wait</code> و <code>notify</code> را در این مسیر یاد نمی‌گیریم</li>
+</ul>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>شمارش گم‌شده.</strong> یک فیلد <code>int count</code> و متد <code>add</code> که صدهزار بار <code>count++</code> کند. دو thread همان متد را روی یک شیء صدا بزنند. بعد از <code>join</code> هر دو، عدد را چاپ کن. انتظار خام ۲۰۰۰۰۰ است؛ چند بار اجرا کن و ببین اغلب کمتر است.</li>
+<li><strong>شمارش درست.</strong> همان برنامه را با <code>synchronized</code> طوری عوض کن که نتیجه همیشه <code>200000</code> باشد.</li>
+<li><strong>دو کار، یک استخر.</strong> با <code>Executors.newFixedThreadPool(2)</code> دو کار بفرست که هر کدام یک ضرب جدا را حساب کند و برگرداند. <code>main</code> هر دو <code>Future</code> را چاپ کند و در آخر <code>shutdown</code> کند.</li>
+<li><strong>Virtual thread.</strong> با <code>Thread.ofVirtual()</code> یک thread بساز که یک جمله را چاپ کند. <code>main</code> آن را <code>join</code> کند تا جمله حتماً قبل از پایان برنامه دیده شود.</li>
+</ol>
+<p><strong>برای فاز بعد آماده‌ای وقتی</strong> می‌توانی توضیح بدهی چرا دو thread روی یک <code>count++</code> نتیجه را کم می‌کنند، همان کار را با <code>synchronized</code> درست می‌کنی، و نتیجه یک <code>Future</code> را بعد از تمام شدن کار می‌خوانی.</p>
+<h2>فاز ۱۲ — JVM در حد یادگیرنده</h2>
+<p><strong>هدف:</strong> بدانی کد تو کجا به bytecode تبدیل می‌شود، stack و heap چه فرقی دارند، و classpath یعنی چه.</p>
+<p><strong>موضوع‌ها</strong></p>
+<ul>
+<li><input type="checkbox" disabled> JDK شامل کامپایلر <code>javac</code>، فرمان <code>java</code>، و کتابخانه استاندارد است. همان را نصب می‌کنی</li>
+<li><input type="checkbox" disabled> <code>javac</code> متن را به bytecode در فایل <code>.class</code> تبدیل می‌کند</li>
+<li><input type="checkbox" disabled> JVM همان bytecode را اجرا می‌کند</li>
+<li><input type="checkbox" disabled> هر فراخوانی متد یک frame روی stack می‌سازد؛ متغیر محلی آنجاست</li>
+<li><input type="checkbox" disabled> شیء با <code>new</code> روی heap می‌نشیند</li>
+<li><input type="checkbox" disabled> garbage collector شیءی را که دیگر از هیچ جا به آن نرسی جمع می‌کند. در جاوا <code>free</code> نمی‌نویسی</li>
+<li><input type="checkbox" disabled> classpath یعنی JVM کلاس را کجا بگردد</li>
+<li><input type="checkbox" disabled> یک جمله درباره JIT کافی است: JVM بخش‌هایی را که زیاد اجرا می‌شوند به کد ماشین تبدیل می‌کند تا سریع‌تر شوند. تنظیم پرچم‌های JVM جزو این مسیر نیست</li>
+<li><input type="checkbox" disabled> از Java 9 ماژول هست. ما در این مسیر <code>module-info.java</code> نمی‌نویسیم؛ classpath برای همین برنامه‌ها کافی است</li>
+</ul>
+<p><strong>تمرین</strong></p>
+<ol>
+<li><strong>دیدن bytecode.</strong> روی کلاس <code>Hello</code> این را بزن و در خروجی، نام <code>main</code> را پیدا کن:</li>
+</ol>
+<div class="lang">bash</div><pre><code>javap -c -p Hello</code></pre>
+<p>لازم نیست دستورها را حفظ کنی. کافی است بگویی این متن، bytecode است نه کد منبع.</p>
+<ol>
+<li><strong>فاکتوریل و stack.</strong> متد بازگشتی <code>factorial(int n)</code> برای <code>n</code> بین ۰ و ۱۰. روی کاغذ فراخوانی‌های <code>factorial(4)</code> را تا رسیدن به ۱ بکش. هر فراخوانی یک frame با <code>n</code> خودش است. اگر <code>n</code> منفی بود <code>IllegalArgumentException</code> پرتاب کن.</li>
+<li><strong>شیء روی heap.</strong> در یک حلقه هزار <code>Book</code> بساز و نگه‌شان دار (مثلاً در یک <code>ArrayList</code>) تا قابل جمع شدن نباشند. در یک کامنت بالای حلقه به فارسی بنویس این شیءها کجا زندگی می‌کنند و چه کسی بعداً آزادشان می‌کند.</li>
+<li><strong>مسیر کلاس.</strong> <code>java Hello</code> را از یک پوشه دیگر اجرا کن تا خطای <code>could not find or load main class</code> را ببینی. بعد با درست کردن پوشه جاری، یا با گزینه <code>-cp</code>، همان برنامه را اجرا کن و یک خط بنویس که classpath را چه دادی.</li>
+</ol>
+<p><strong>برای تمام شدن این مسیر آماده‌ای وقتی</strong> فرق stack و heap را با یک متد و یک <code>new</code> از کد خودت توضیح می‌دهی، خروجی <code>javap</code> را bytecode می‌نامی، و خطای پیدا نشدن class را به مسیر اشتباه نسبت می‌دهی نه به «خراب شدن جاوا».</p>
+<hr>
+<h2>ریتم هر جلسه</h2>
+<p>هر جلسه حدود ۴۵ تا ۹۰ دقیقه است. اول مفهوم، بعد کد. اگر به ۹۰ دقیقه رسیدی همان‌جا توقف کن، حتی اگر تمرین مانده باشد.</p>
+<table>
+<thead><tr><th>بخش جلسه</th><th>زمان</th><th>کار</th></tr></thead>
+<tbody>
+<tr><td>مفهوم</td><td>۱۰ تا ۲۰ دقیقه</td><td>همان موضوع فاز، با یک مثال کوتاه که خط‌به‌خط خوانده می‌شود</td></tr>
+<tr><td>کد تو</td><td>بقیه جلسه</td><td>یک تمرین را بنویس، اجرا کن، خطا را بخوان، اصلاح کن</td></tr>
+<tr><td>جمع‌بندی</td><td>۲ دقیقه</td><td>یک جمله: «امروز این را خودم توانستم توضیح بدهم: …»</td></tr>
+</tbody></table>
+<p>جلسه ۴۵ دقیقه‌ای فقط یک تمرین را تمام می‌کند. یک برنامه کوچک که اجرا می‌شود بهتر از سه تمرین نیمه‌کاره است.</p>
+<p>قانون عبور از فاز: تمرین‌ها را خودت نوشته باشی، هر کدام یک بار واقعاً اجرا شده باشد، و جمله آمادگی همان فاز را بدون نگاه به جزوه نشان بدهی. تمام کردن فاز یعنی این، نه رد شدن از روی کد آماده.</p>
+<p>اگر جلسه وسط یک تمرین تمام شد، جلسه بعد از همان تمرین ادامه بده. فاز جدید را وسط کار باز نکن.</p>
+<h2>شروع از اینجا</h2>
+<p>جلسه بعد فقط <strong>فاز ۱ — محیط و اولین برنامه</strong> است. فاز ۲ را باز نکن.</p>
+<p>سه کاری که همان جلسه با هم انجام می‌دهیم:</p>
+<ol>
+<li>JDK 21 را نصب می‌کنیم و با <code>java -version</code> و <code>javac -version</code> مطمئن می‌شویم هر دو نسخه 21 را نشان می‌دهند.</li>
+<li>فایل <code>Hello.java</code> را با یک class و متد <code>main</code> می‌نویسیم، با <code>javac Hello.java</code> کامپایل می‌کنیم و با <code>java Hello</code> اجرا می‌کنیم.</li>
+<li>همان برنامه را عوض می‌کنیم تا در دو خط، نام «امیررضا» و یک جمله کوتاه چاپ شود، و بالای <code>main</code> یک کامنت <code>//</code> بنویسیم که بگوید این برنامه چه می‌کند.</li>
+</ol>
+<p>اگر وقت ماند، تمرین سوم فاز ۱ را هم انجام بده: یک <code>;</code> را عمداً بردار، شماره خط را در پیام <code>javac</code> پیدا کن و درستش کن. اگر نرسید، جلسه بعد از همان خطا شروع می‌کنیم و بعد می‌رویم سراغ فاز ۲.</p>
+</body>
+</html>
