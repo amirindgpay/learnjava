@@ -10,7 +10,7 @@
 
 ---
 
-## فاز ۱ — قابلیت‌های مدرن زبان
+## [فاز ۱ — قابلیت‌های مدرن زبان](advanced/01-modern-language.md)
 
 **هدف:** نوع و شاخه‌بندی را با ابزار پایدار Java 21 مدل کنی، نه با سلسله‌مراتب شلخته.
 
@@ -29,7 +29,7 @@
 
 **باید بتوانی بسازی:** یک مدل دامنهٔ کوچک با `sealed` و `record` که `switch` روی آن exhaustive باشد.
 
-## فاز ۲ — Generics پیشرفته
+## [فاز ۲ — Generics پیشرفته](advanced/02-generics.md)
 
 **هدف:** امضای generic را طوری بنویسی که erasure و جهت داده را خودت دیدی باشی.
 
@@ -47,7 +47,7 @@
 
 **باید بتوانی بسازی:** یک API کوچک که تولیدکننده و مصرف‌کننده را با PECS جدا کرده باشد.
 
-## فاز ۳ — برابری و Collections
+## [فاز ۳ — برابری و Collections](advanced/03-equality-collections.md)
 
 **هدف:** قرارداد برابری را با انتخاب ساختار و هزینهٔ دسترسی یکی کنی.
 
@@ -67,7 +67,7 @@
 
 **باید بتوانی بسازی:** یک نوع دامنه با `equals` / `hashCode` / `Comparable` که در `HashSet` و `TreeSet` درست بنشیند.
 
-## فاز ۴ — Stream، Collector و Optional
+## [فاز ۴ — Stream، Collector و Optional](advanced/04-stream-collector-optional.md)
 
 **هدف:** تجمیع را با Collector درست جمع کنی و نبودن مقدار را از `null` جدا نگه داری.
 
@@ -86,7 +86,7 @@
 
 **باید بتوانی بسازی:** یک گزارش تجمیعی با `groupingBy` و یک Collector ترکیبی، بدون `NullPointerException` برای مقدار غایب.
 
-## فاز ۵ — Exception و try-with-resources
+## [فاز ۵ — Exception و try-with-resources](advanced/05-exception-try-with-resources.md)
 
 **هدف:** خطای اصلی، علت، و خطای بستن منبع را از هم جدا کنی.
 
@@ -104,7 +104,7 @@
 
 **باید بتوانی بسازی:** یک `AutoCloseable` ساختگی که هم خطای کار و هم خطای `close` را با `cause` و suppressed نشان بدهد.
 
-## فاز ۶ — I/O و NIO.2
+## [فاز ۶ — I/O و NIO.2](advanced/06-io-nio2.md)
 
 **هدف:** متن و بایت را با charset و بافر مشخص جابه‌جا کنی، نه با پیش‌فرض پنهان.
 
@@ -121,7 +121,7 @@
 
 **باید بتوانی بسازی:** کپی یک فایل باینری با channel و buffer، و خواندن یک متن با charset اعلام‌شده.
 
-## فاز ۷ — Concurrency و Java Memory Model
+## [فاز ۷ — Concurrency و Java Memory Model](advanced/07-concurrency-jmm.md)
 
 **هدف:** visibility، atomicity، و مدل اجرای Java 21 را از هم جدا ببینی.
 
@@ -143,7 +143,7 @@
 
 **باید بتوانی بسازی:** یک کار موازی با virtual thread و یک وضعیت مشترک که visibility آن با `volatile` یا lock درست شده باشد.
 
-## فاز ۸ — Reflection، Annotation و Method Handle
+## [فاز ۸ — Reflection، Annotation و Method Handle](advanced/08-reflection-annotation-methodhandle.md)
 
 **هدف:** متادیتا و صدا زدن غیرمستقیم را فقط جایی به کار ببری که API معمولی کافی نیست.
 
@@ -160,7 +160,7 @@
 
 **باید بتوانی بسازی:** یک annotation با retention مناسب که روی متد خوانده شود و همان متد یک بار با `MethodHandle` صدا زده شود.
 
-## فاز ۹ — Module و مرز classpath
+## [فاز ۹ — Module و مرز classpath](advanced/09-modules-classpath.md)
 
 **هدف:** مرز بستهٔ کد را بفهمی و classpath را با module path عوضی نگیری.
 
@@ -177,7 +177,7 @@
 
 **باید بتوانی بسازی:** یک برنامهٔ دوماژوله که فقط API را export کند و دسترسی بیرون به داخل ماژول را رد کند.
 
-## فاز ۱۰ — JVM
+## [فاز ۱۰ — JVM](advanced/10-jvm.md)
 
 **هدف:** از bytecode تا GC و پروفایل، بدانی چه چیزی را نگاه کنی و چه چیزی را حدس نزنی.
 
